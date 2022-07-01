@@ -1,0 +1,216 @@
+89S52 Trainer Kit
+
+Elevator code
+
+PO^O to PO^3 = Elevator request input P2^0 to P2^3= Reset Elevator request
+
+P2^4 to P2^7= o/p to 7442
+
+#include<REG52.H>
+
+#define LOOPS 20
+
+#define TIME_LOWER 0xFC
+
+#define TIME_UPPER 0x4B
+
+#define INIT O
+
+#define KEY_POLL 1
+
+#define START 2
+
+#define STOP 3
+
+bit Start_b= 0, Up_b= 0, Found_b = 0; unsigned char State, Next_level,Loops; signed char Current_level;
+
+cOS52 Trainer Kit
+
+void delay(unsigned int del) { while(del--)
+
+void main(void) {
+
+unsigned char key, mask;
+
+State = INIT;
+
+while(!) {
+
+switch(State) {
+
+case INIT: TMOD = 0x01;
+
+IE = 0x82;
+
+PO = 0xFF;
+
+P2 = 0x0F;
+
+State = KEY POLL;
+
+break;
+
+case KEY POLL: key = PO & 0x0F;
+
+Found_b = 0;
+
+if(!Start_b && ((key & 0x0F) !=0x0F)) {
+
+if(!Up_b) {
+
+for(mask = (0x01 << (Next_level = Current_level / 3)); mask <=
+
+0x08; mask <<<<= 1) {
+
+if(!(mask & key)) {
+
+Up_b = 0;
+
+Found_b = 1;
+
+break;
+
+}
+
+else
+}
+
+89S52 Trainer Kit
+
+}
+
+}
+
+else
+
+if(!Found_b)
+
+if(Up_b) {
+
+1) {
+
+for(mask= (0x01 << (Next_level = Current_level / 3)); mask; mask >>=
+
+if(!(mask & key)) {
+
+Up_b = 1;
+
+Found_b = 1;
+
+break;
+
+Next_level;
+
+Up_b = 0;
+
+if(Found_b)
+
+}
+
+State = START;
+
+if(!Found b)
+
+Up_b = 1;
+
+}
+
+break;
+
+case START: if(Current_level != (Next_level * 3)) {
+
+THO=TIME_UPPER;
+
+TLO=TIME_LOWER;
+
+}
+
+else {
+
+TRO = 1;
+
+Start_b = 1;
+
+User Manual
+
+P2 &=(-(0x01 << Next_level));
+}
+
+89S52 Trainer Kit
+
+}
+
+delay(200);
+
+P2 |= 0x0F;
+
+State = KEY_POLL;
+
+break;
+
+case STOP: TR0 = 0;
+
+P2 = 0x0F;
+
+P2 &=(-(0x01 << Next_level));
+
+delay(100);
+
+P2 = 0x0F;
+
+Start_b = 0;
+
+State = KEY_POLL;
+
+break;
+
+void timer0_isr(void) interrupt 1 {\
+
+TRO = 0;
+
+THO= TIME_UPPER;
+
+TLO TIME_LOWER;
+
+TRO= 1;
+
+++Loops;
+
+if(Loops == LOOPS) {
+
+Loops = 0x00;
+
+if(!Up_b)
+
+else
+
+++Current_level;
+
+User Manual
+}
+
+PO^O to PO^3 = Elevator request input P2^0 to P2^3= Reset Elevator request
+
+P2^4 to P2^7= o/p to 7442
+
+#include<REG52.H>
+
+#define LOOPS 20
+
+#define TIME_LOWER 0xFC
+
+#define TIME_UPPER 0x4B
+
+#define INIT O
+
+#define KEY_POLL 1
+
+#define START 2
+
+#define STOP 3
+
+bit Start_b= 0, Up_b= 0, Found_b = 0; unsigned char State, Next_level,Loops; signed char Current_level;
+
+
+
+
